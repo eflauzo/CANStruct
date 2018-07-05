@@ -1,0 +1,46 @@
+J1939:
+  arb_id:
+        frame: extended
+        components:
+          source_address:
+              short_name: SA
+              description: "Node that send message"
+              type: uint8
+              start_bit: 0
+              bit_count: 8
+          pdu_specific:
+              short_name: PS
+              type: uint8
+              start_bit: 8
+              bit_count: 8
+          pdu_format:
+              type: uint8
+              short_name: PF
+              start_bit: 16
+              bit_count: 8
+
+  messages:
+    EngineTorque:
+      frame_length: 8
+      filter:
+        pdu_format: 0xF0
+        pdu_specific: 0x04
+      data:
+        torque:
+          uom: '%'
+          type: float
+          #byte_order: left to right
+          start_byte: 3
+          start_bit: 0
+          bit_count: 8
+          scale: 1.0
+          offset: -125
+        speed:
+          uom: 'rpm'
+          type: float
+          #byte_order: right to left
+          start_byte: 4
+          start_bit: 0
+          bit_count: 16
+          scale: 0.125
+          offset: 0.0
