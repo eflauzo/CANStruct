@@ -1,4 +1,6 @@
 J1939:
+  enums:
+    HIGH_SPEED: 30
   arb_id:
         frame: extended
         components:
@@ -8,6 +10,7 @@ J1939:
               type: uint8
               start_bit: 0
               bit_count: 8
+              meta_type: SOURCE
           pdu_specific:
               short_name: PS
               type: uint8
@@ -18,11 +21,30 @@ J1939:
               short_name: PF
               start_bit: 16
               bit_count: 8
+          data_page:
+              type: uint8
+              short_name: data_page
+              start_bit: 24
+              bit_count: 1
+              default: 0x0
+          reserved:
+              type: uint8
+              short_name: reserved
+              start_bit: 25
+              bit_count: 1
+              default: 0x0
+          priority:
+              type: uint8
+              short_name: priority
+              start_bit: 26
+              bit_count: 3
+              default: 0x07
 
   messages:
     EngineTorque:
       frame_length: 8
-      filter:
+      transmit_rate: 50
+      id:
         pdu_format: 0xF0
         pdu_specific: 0x04
       data:
@@ -35,6 +57,7 @@ J1939:
           bit_count: 8
           scale: 1.0
           offset: -125
+          default: 0.0
         speed:
           uom: 'rpm'
           type: float
@@ -44,3 +67,4 @@ J1939:
           bit_count: 16
           scale: 0.125
           offset: 0.0
+          default: 0.0

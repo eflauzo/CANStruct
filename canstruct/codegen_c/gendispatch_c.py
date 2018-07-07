@@ -18,8 +18,8 @@ class DispatchCodeGeneratorC(object):
         result += 'struct {}Dispatcher_t{{\n'.format(
             self._proto
         )
+        result += indent + 'void *user_data;\n'
         for message in self._messages['messages']:
-            result += indent + 'void *user_data;\n'
             result += indent + 'void (*on_{}_ptr)(struct {}Dispatcher_t*, {} arb_id, struct {}{}_t *msg);\n'.format(
                 message,
                 self._proto,
@@ -66,7 +66,7 @@ class DispatchCodeGeneratorC(object):
             result += indent + 'if (\n'
             #result += indent + 'if (\n'
             conditions = []
-            for field, value in message_def['filter'].iteritems():
+            for field, value in message_def['id'].iteritems():
                 conditions.append('(arb_id_struct.{}=={})'.format(field, value))
             conditions_str = '&&'.join(conditions)
             result += indent + indent + conditions_str + '\n'
@@ -74,7 +74,7 @@ class DispatchCodeGeneratorC(object):
             result += indent + indent + 'if (handle->on_{}_ptr != NULL){{\n'.format(message);
             result += indent + indent + indent + 'struct {}{}_t msg;\n'.format(self._proto, message);
             result += indent + indent + indent + '{}{}_decode(&msg, data);\n'.format(self._proto, message);
-            result += indent + indent + indent + 'handle->on_{}_ptr(handle, arb_id, &msg);\n'.format(message)
+            result += indent + indent + indent + '(*handle->on_{}_ptr)(handle, arb_id, &msg);\n'.format(message)
             result += indent + indent + '}\n'
             result += indent + '}\n'
         result += "}\n"

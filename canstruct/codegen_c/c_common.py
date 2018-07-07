@@ -1,22 +1,22 @@
 
 def type_to_c_type(datatype):
     if datatype == 'uint8':
-        return 'unsigned char'
+        return 'uint8_t'
 
     if datatype == 'uint16':
-        return 'unsigned short'
+        return 'uint16_t'
 
     if datatype == 'uint32':
-        return 'unsigned int'
+        return 'uint32_t'
 
     if datatype == 'int8':
-        return 'char'
+        return 'int8_t'
 
     if datatype == 'int16':
-        return 'short'
+        return 'int16_t'
 
     if datatype == 'int32':
-        return 'int'
+        return 'int32_t'
 
     if datatype == 'float':
         return 'float'

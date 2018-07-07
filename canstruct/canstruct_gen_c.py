@@ -6,7 +6,7 @@ import yaml
 from canstruct.codegen_c import gendata_class_c
 from canstruct.codegen_c import genarb_c
 from canstruct.codegen_c import gendispatch_c
-
+from canstruct.codegen_c import genbuild_msg_c
 
 def generate(messages, outdir):
     if not os.path.isdir(outdir):
@@ -17,6 +17,8 @@ def generate(messages, outdir):
 
         output_code_h = '#ifndef {}\n'.format(header_name)
         output_code_h += '#define {}\n\n'.format(header_name)
+        output_code_h += '#include <stdint.h>\n'
+
         output_code_c = '#include "{}.h"\n'.format(base_filename)
         output_code_c += '#include <stddef.h>\n'
 
@@ -35,14 +37,18 @@ def generate(messages, outdir):
             output_code_h += generator.generate_def()
             output_code_c += generator.generate_impl()
 
-            generator = gendispatch_c.DispatchCodeGeneratorC(proto_name, proto_def)
-            output_code_h += generator.generate_def()
-            output_code_c += generator.generate_impl()
+        generator = gendispatch_c.DispatchCodeGeneratorC(proto_name, proto_def)
+        output_code_h += generator.generate_def()
+        output_code_c += generator.generate_impl()
+
+        generator = genbuild_msg_c.BuildMsgCodeGeneratorC(proto_name, proto_def);
+        output_code_h += generator.generate_def()
+        output_code_c += generator.generate_impl()
 
         output_code_h +='\n#endif'
 
         h_filename = os.path.join(outdir,base_filename+'.h')
-        c_filename = os.path.join(outdir,base_filename+'.c')
+        c_filename = os.path.join(outdir,base_filename+'.cpp')
 
         open(h_filename, 'w').write(output_code_h)
         open(c_filename, 'w').write(output_code_c)

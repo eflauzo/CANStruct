@@ -31,7 +31,7 @@ class ArbCodeGeneratorC(object):
             #result += indent + '{} {};\n'.format(type_to_c_type(component_def['type']), component_name)
             bit_mask = '0b' + ('1' * component_def['bit_count'])
             hex_bit_max = bin_to_hex(bit_mask)
-            result += indent + 'result |= ({} & handle->{}) << {};\n'.format(hex_bit_max, component_name,  component_def['start_bit'])
+            result += indent + 'result |= (uint32_t)({} & handle->{}) << {};\n'.format(hex_bit_max, component_name,  component_def['start_bit'])
         result += indent + 'return result;\n'
         result += "}\n\n"
 
