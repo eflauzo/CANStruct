@@ -1,6 +1,5 @@
 
 def bit_mask(bit_count):
-    #print "bit_count ", bit_count
     return int('0b'+('1' * bit_count), 2)
 
 class CANStruct(object):
@@ -19,7 +18,7 @@ class CANStruct(object):
         result = 0x0
         for field_name, field_def in self.config['arb_id']['components'].iteritems():
             mask = bit_mask(field_def['bit_count'])
-            result |= int(arbid_dict[field_name]) & mask << start_bit
+            result |= (int(arbid_dict[field_name]) & mask) << field_def['start_bit']
         return result
 
     def decode_message(self, message_type, message):
@@ -32,7 +31,6 @@ class CANStruct(object):
             shift = 0
             while bits_to_read > 0:
                 max_avail_bits = 8 - start_bit
-                #bits_in_this_byte = bits_to_read
                 if bits_to_read > max_avail_bits:
                     bits_in_this_byte = max_avail_bits
                 else:
@@ -57,14 +55,13 @@ class CANStruct(object):
             byte_i = field_def['start_byte'] - 1
             bits_to_write = field_def['bit_count']
             while bits_to_write > 0:
-                bits_in_this_byte = bits_to_write
-                if bits_in_this_byte > 8:
+                bits_in_this_byte = start_bit + bits_to_write
+                if bits_in_this_byte>8:
                     bits_in_this_byte -= 8
                 bits_in_this_byte -= start_bit
                 mask = bit_mask(bits_in_this_byte)
                 bits_to_write -= bits_in_this_byte
-                result_byte = (value & mask) << start_bit
-                result[byte_i] = result_byte
+                result[byte_i] |= (value & mask) << start_bit
                 value = value >> bits_in_this_byte
                 start_bit = 0
                 byte_i += 1

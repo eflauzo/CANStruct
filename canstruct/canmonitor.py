@@ -33,12 +33,10 @@ class MsgRecord(object):
         return self._rate
 
     def is_stale(self):
-        #delta_t = time.time() - self.last_message_timestamp
-        max_delay = (1.0 / self.rate * 4.0) # + self.last_message_timestamp
+        max_delay = (1.0 / self.rate * 4.0)
         if (time.time() - self.last_message_timestamp) > max_delay:
             return True
         return False
-        #self._rate
 
 
     def update(self, message):
@@ -93,6 +91,7 @@ class MessagesWalker(urwid.ListWalker):
             decoded_msg = canstruct_object.decode_message(msg_type, message_rec.data)
             items = []
 
+            items.append(urwid.Text('{}'.format(data_hex)))
             items.append(urwid.Text('{}'.format(msg_type)))
 
             for id, value in decoded_msg.iteritems():
